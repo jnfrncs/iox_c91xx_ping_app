@@ -2,7 +2,8 @@
 Simple app to install and run as an IOX container on a Cisco C9120-30 AP
 
 reference : Devnet : https://developer.cisco.com/docs/app-hosting-ap/
-Below cmds to run inside the IOX VM , or equivalent (docker + ioxclient)
+
+Below cmds : run them inside the IOX VM (see Devnet ref), or equivalent (docker + ioxclient)
 # 
 Copyright 11/2021 Cisco Systems /  jpujol@cisco.com
 #
