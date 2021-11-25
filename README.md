@@ -8,9 +8,11 @@ Below cmds : run them inside the IOX VM (see Devnet ref), or equivalent (docker 
 Copyright 11/2021 Cisco Systems /  jpujol@cisco.com
 #
 STEP 1: 
+
 docker build -t iox-ping-app .
  
 STEP2:
+
 mkdir -p package.dir
 
 cp package.yaml package.dir/
