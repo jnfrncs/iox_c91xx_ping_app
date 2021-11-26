@@ -22,3 +22,7 @@ sudo ioxclient docker package -p ext2 -r -1 iox-ping-app ./package.dir/
 #
 Import the package.tar file (should be less than 20Mb) into DNAC as an IOX app, or 
 deploy it directly into the AP using ioxclient. 
+
+#
+
+In case you are really impatient, do not build the package yourself, you can impport the package.tar file available here directly into DNAC app repository. (Provision -> IOT Services)
