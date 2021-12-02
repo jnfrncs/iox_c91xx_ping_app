@@ -13,6 +13,12 @@ SERVICEPORT=8010
 DFLT_PKT_SIZE=56 # default ICMP packet size
 DFLT_TTL=255 # default ICMP TTL
 
+HELPMSG = { "/ping/help" : "This help",
+           "/ping/time" : "returns the container local time",
+           "/ping/<target IP@>" : "ping target IP@ ",
+           "/ping/<target IP@>/size/<packet size>" : "ping target IP@ (w/ packet size) ",
+           "/ping/<target IP@>/ttl/<TTL value>" : "ping target IP@ (w/ TTL value) "}
+
 def target_ping(ip_address, size=DFLT_PKT_SIZE, ttl=DFLT_TTL):
    result = False
    output = subprocess.Popen(['ping', '-n', '-c', '2', '-w', '2', '-s', str(size), '-t', str(ttl), str(ip_address)],
@@ -21,6 +27,10 @@ def target_ping(ip_address, size=DFLT_PKT_SIZE, ttl=DFLT_TTL):
       result = True
    return(result)
 
+@route('/help')
+def help():
+    return { "help" : HELPMSG }
+   
 """
    returns the local AP time 
    try with : curl http://<AP IP@>:<SERVICEPORT>/time 
