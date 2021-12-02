@@ -26,3 +26,8 @@ deploy it directly into the AP using ioxclient.
 #
 
 In case you are really impatient, do not build the package yourself, you can impport the package.tar file available here directly into DNAC app repository. (Provision -> IOT Services)
+
+# 
+
+Multiple calls to this application on a set of APs can be initiated from the iox_dping_srv_app (parallel calls and statistics)
+see https://github.com/jnfrncs/iox_dping_srv_app
