@@ -31,3 +31,19 @@ In case you are really impatient, do not build the package yourself, you can imp
 
 Multiple calls to this application on a set of APs can be initiated from the iox_dping_srv_app (parallel calls and statistics)
 see https://github.com/jnfrncs/iox_dping_srv_app
+
+# test it : 
+
+From your web navigator or curl : http://<AP IP>:8010/help 
+ 	
+help	
+ 
+/ping/help	"This help"
+ 
+/ping/time	"returns the container local time"
+ 
+/ping/<target IP@>	"ping target IP@"
+ 
+/ping/<target IP@>/size/<packet size>	"ping target IP@ (w/ packet size)"
+
+/ping/<target IP@>/ttl/<TTL value>	"ping target IP@ (w/ TTL value) "
