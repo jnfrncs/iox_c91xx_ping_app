@@ -10,11 +10,13 @@ from datetime import datetime
 import subprocess
 
 SERVICEPORT=8010
+DFLT_PKT_SIZE=56 # default ICMP packet size
+DFLT_TTL=255 # default ICMP TTL
 
-def dest_ping(ip_address):
+def target_ping(ip_address, size=DFLT_PKT_SIZE, ttl=DFLT_TTL):
    result = False
-   output = subprocess.Popen(['ping', '-n', '-c', '2', '-w', '2', str(ip_address)],
-				stdout=subprocess.PIPE).communicate()[0]
+   output = subprocess.Popen(['ping', '-n', '-c', '2', '-w', '2', '-s', str(size), '-t', str(ttl), str(ip_address)],
+                              stdout=subprocess.PIPE).communicate()[0]
    if "2 packets received, 0% packet loss" in output.decode('utf-8'):
       result = True
    return(result)
@@ -29,24 +31,41 @@ def time():
    return {"system": 1, "datetime": current_time}
 
 """
-   returns the string <string_id> given in the URL 
-   try with : curl http://<AP IP@>:<SERVICEPORT>/status/blah 
-"""
-@route('/status/<string_id>')
-def status(string_id):
-   return { "system": 1, "device": str(string_id) }
-
-"""
    pings the IP@ given in the URL and returns (Un)Reachable 
    try with : curl http://<AP IP@>:<SERVICEPORT>/ping/<any IP@>
 """
 @route('/ping/<ip_address>')
-def status(ip_address):
+def ping(ip_address):
    ip_address = str(ip_address)
-   if dest_ping(ip_address):
+   if target_ping(ip_address):
       return { "ping": "Reachable", "ip_address": ip_address }
    else:
       return { "ping": "Unreachable", "ip_address": ip_address }
 
+"""
+   pings the IP@ given in the URL (including packet size) and returns (Un)Reachable 
+   try with : curl http://<AP IP@>:<SERVICEPORT>/ping/<any IP@>/size/<packet size>
+"""
+@route('/ping/<ip_address>/size/<size>')
+def ping_size(ip_address,size):
+   ip_address = str(ip_address)
+   size = str(size)
+   if target_ping(ip_address,size,DFLT_TTL):
+      return { "ping": "Reachable", "ip_address": ip_address }
+   else:
+      return { "ping": "Unreachable", "ip_address": ip_address }
+
+"""
+   pings the IP@ given in the URL (including TTL) and returns (Un)Reachable 
+   try with : curl http://<AP IP@>:<SERVICEPORT>/ping/<any IP@>/ttl/<TTL value>
+"""
+@route('/ping/<ip_address>/ttl/<ttl>')
+def ping_ttl(ip_address,ttl):
+   ip_address = str(ip_address)
+   ttl = str(ttl)
+   if target_ping(ip_address, DFLT_PKT_SIZE, ttl):
+      return { "ping": "Reachable", "ip_address": ip_address }
+   else:
+      return { "ping": "Unreachable", "ip_address": ip_address }
 
 run(host='0.0.0.0', port=SERVICEPORT)
