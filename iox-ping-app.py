@@ -19,14 +19,36 @@ HELPMSG = { "/ping/help" : "This help",
            "/ping/<target IP@>/size/<packet size>" : "ping target IP@ (w/ packet size) ",
            "/ping/<target IP@>/ttl/<TTL value>" : "ping target IP@ (w/ TTL value) "}
 
+"""
+   extracts rtt values from the ping command results, or returns all = 0
+"""
+def rttValues(pings):
+   min = avg = max = 0
+   str1 = pings.split("round-trip")
+   if len(str1) > 1:
+      str2 = str1[1].split()
+      if len(str2) >2:
+         str3 = str2[2].split('/')
+         if len(str3) == 3 :
+            min = str3[0]
+            avg = str3[1]
+            max = str3[2]
+   return({ 'min':min, 'avg':avg, 'max':max})
+
+"""
+   exec ping command from the container
+"""
 def target_ping(ip_address, size=DFLT_PKT_SIZE, ttl=DFLT_TTL):
-   result = False
-   output = subprocess.Popen(['ping', '-n', '-c', '2', '-w', '2', '-s', str(size), '-t', str(ttl), str(ip_address)],
+   results = { 'ping': False }
+   output = subprocess.Popen(['ping', '-n', '-c', '3', '-w', '2', '-s', str(size), '-t', str(ttl), str(ip_address)],
                               stdout=subprocess.PIPE).communicate()[0]
    if "2 packets received, 0% packet loss" in output.decode('utf-8'):
-      result = True
-   return(result)
+      results = { 'ping': True , 'stats' : rttValues(output)}
+   return(results)
 
+"""
+   help message
+"""
 @route('/help')
 def help():
     return { "help" : HELPMSG }
@@ -46,9 +68,9 @@ def time():
 """
 @route('/ping/<ip_address>')
 def ping(ip_address):
-   ip_address = str(ip_address)
-   if target_ping(ip_address):
-      return { "ping": "Reachable", "ip_address": ip_address }
+   results = target_ping(ip_address)
+   if results['ping'] :
+      return { "ping": "Reachable", "ip_address": ip_address , 'stats' : results['stats']}
    else:
       return { "ping": "Unreachable", "ip_address": ip_address }
 
@@ -58,10 +80,9 @@ def ping(ip_address):
 """
 @route('/ping/<ip_address>/size/<size>')
 def ping_size(ip_address,size):
-   ip_address = str(ip_address)
-   size = str(size)
-   if target_ping(ip_address,size,DFLT_TTL):
-      return { "ping": "Reachable", "ip_address": ip_address }
+   results = target_ping(ip_address,size,DFLT_TTL)
+   if results['ping']:
+      return { "ping": "Reachable", "ip_address": ip_address, 'stats' : results['stats'] }
    else:
       return { "ping": "Unreachable", "ip_address": ip_address }
 
@@ -71,10 +92,9 @@ def ping_size(ip_address,size):
 """
 @route('/ping/<ip_address>/ttl/<ttl>')
 def ping_ttl(ip_address,ttl):
-   ip_address = str(ip_address)
-   ttl = str(ttl)
-   if target_ping(ip_address, DFLT_PKT_SIZE, ttl):
-      return { "ping": "Reachable", "ip_address": ip_address }
+   results = target_ping(ip_address, DFLT_PKT_SIZE, ttl)
+   if results['ping']:
+      return { "ping": "Reachable", "ip_address": ip_address, 'stats' : results['stats'] }
    else:
       return { "ping": "Unreachable", "ip_address": ip_address }
 
