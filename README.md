@@ -9,7 +9,7 @@ Copyright 11/2021 Cisco Systems /  jpujol@cisco.com
 #
 STEP 1: 
 
-docker build -t iox-ping-app .
+docker build -t iox_ping_app .
  
 STEP2:
 
@@ -17,7 +17,7 @@ mkdir -p package.dir
 
 cp package.yaml package.dir/
 
-sudo ioxclient docker package -p ext2 -r -1 iox-ping-app ./package.dir/
+sudo ioxclient docker package -p ext2 -r -1 iox_ping_app ./package.dir/
 
 #
 Import the package.tar file (should be less than 20Mb) into DNAC as an IOX app, or 
