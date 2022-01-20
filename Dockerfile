@@ -3,8 +3,6 @@ RUN opkg update && opkg install python-pip
 RUN python -m pip install bottle
 RUN opkg remove python-pip && opkg clean
 EXPOSE 8010
-COPY iox-ping-app.py /iox-ping-app.py
-COPY iox-ping-app.sh /iox-ping-app.sh
-RUN chmod 777 /iox-ping-app.sh
-RUN ln -s /iox-ping-app.sh /etc/rc5.d/S50iox-ping-app.sh
-CMD ["/iox-ping-app.sh"]
+COPY iox_ping_app.py /usr/bin/iox_ping_app.py
+COPY iox_ping_app.sh /usr/bin/iox_ping_app.sh
+RUN chmod 777 /usr/bin/iox_ping_app.sh
