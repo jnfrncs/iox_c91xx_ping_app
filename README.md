@@ -33,7 +33,7 @@ ioxclient --profile AP9120I.5130 application start iox_basic_app
 
 #
 
-In case you are really impatient, do not build the package yourself, you can impport the package.tar file available here directly into DNAC app repository. (Provision -> IOT Services)
+In case you are really impatient, do not build the package yourself, you can import the "package.tar" file provided here directly into DNAC app repository  (Provision -> IOT Services), or by the ioxclient manual process.
 
 # 
 
